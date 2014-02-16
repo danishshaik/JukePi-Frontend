@@ -1,0 +1,103 @@
+   <canvas id="canvas" style="width:100%; height:100%;"></canvas>
+
+    <script src="js/leap.js"></script>
+
+    <script>
+      var controller = new Leap.Controller({ enableGestures: true });
+
+      var canvas = document.getElementById( 'canvas' );
+
+      var c =  canvas.getContext( '2d' );
+
+      var width = canvas.width;
+      var height = canvas.height;
+
+      var frame;
+
+      function leapToScene( leapPos ){
+
+        var iBox = frame.interactionBox;
+
+        var left = iBox.center[0] - iBox.size[0]/2;
+        var top = iBox.center[1] + iBox.size[1]/2;
+
+        var x = leapPos[0] - left;
+        var y = leapPos[1] - top;
+
+        x /= iBox.size[0];
+        y /= iBox.size[1];
+
+        x *= width;
+        y *= height;
+
+        return [ x , -y ];
+
+      }
+
+      controller.on( 'frame' , function( data ){
+      	frame = data;
+      for( var i =  0; i < frame.gestures.length; i++){
+      c.clearRect( 0 , 0 , width , height );
+      var gesture  = frame.gestures[i];
+      var type = gesture.type;
+
+   	  switch( type ){
+
+      case "circle":
+        onCircle( gesture );
+        break;
+
+      case "swipe":
+        onSwipe( gesture );
+        break;
+
+      case "screenTap":
+        onScreenTap( gesture );
+        break;
+
+      case "keyTap":
+        onKeyTap( gesture );
+        break;
+
+    }}
+
+      });
+      function onCircle( gesture ){
+      console.log("on circle works")
+      // First get our position using the leapToScene Function
+      var pos = leapToScene( gesture.center );
+
+      // Assigning the radius
+      var r = gesture.radius;
+
+    
+     var clockwise = false;
+
+    if( gesture.normal[2]  <= 0 ){
+
+      clockwise = true;
+
+    }
+
+    // Setting up the style for the stroke, and fill
+    c.fillStyle   = "#2ecc71";
+    c.strokeStyle = "#39AECF";
+    c.lineWidth   = 5;
+
+
+    // Creating the path for the finger circle
+    c.beginPath();
+
+    // Draw a full circle of radius 6 at the finger position
+    c.arc(pos[0], pos[1], r, 0, Math.PI*2);
+
+    c.closePath();
+
+    if( clockwise )
+      c.stroke();
+    else
+      c.fill();
+}
+      controller.connect();
+
+    </script>
