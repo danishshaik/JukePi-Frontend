@@ -46,19 +46,6 @@
       case "circle":
         onCircle( gesture );
         break;
-
-      case "swipe":
-        onSwipe( gesture );
-        break;
-
-      case "screenTap":
-        onScreenTap( gesture );
-        break;
-
-      case "keyTap":
-        onKeyTap( gesture );
-        break;
-
     }}
 
       });
@@ -76,6 +63,12 @@
     if( gesture.normal[2]  <= 0 ){
 
       clockwise = true;
+
+    }
+
+    function onKeyTap( gesture ){
+      console.log("ongestureworks")
+      // First get our position using the leapToScene Function
 
     }
 
